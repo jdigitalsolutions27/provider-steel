@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 type GalleryItem = {
   id: string;
@@ -254,9 +255,9 @@ export function GalleryAlbumGrid({
             >
               <div className="absolute inset-0 bg-white/5">
                 {album.preview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <FallbackImage
                     src={album.preview}
+                    fallbackSrc="/placeholders/steel-1.svg"
                     alt={album.label}
                     loading="lazy"
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
@@ -320,9 +321,9 @@ export function GalleryAlbumGrid({
                   className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left shadow-card transition hover:-translate-y-0.5 hover:border-white/30"
                 >
                   <div className="relative aspect-square w-full overflow-hidden bg-white/5 sm:aspect-[4/3]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <FallbackImage
                       src={item.imageUrl}
+                      fallbackSrc="/placeholders/steel-1.svg"
                       alt={item.title}
                       loading="lazy"
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
@@ -401,9 +402,9 @@ export function GalleryAlbumGrid({
                 Next
               </button>
 
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <FallbackImage
                 src={activeItem.imageUrl}
+                fallbackSrc="/placeholders/steel-1.svg"
                 alt={activeItem.title}
                 onLoad={() => setImageLoading(false)}
                 className="relative z-[2] mx-auto h-full max-h-[74vh] w-full rounded-xl bg-[#06101a] object-contain"
@@ -430,8 +431,13 @@ export function GalleryAlbumGrid({
                         : "border-white/15 hover:border-white/35"
                     }`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.imageUrl} alt={item.title} loading="lazy" className="h-full w-full object-cover" />
+                    <FallbackImage
+                      src={item.imageUrl}
+                      fallbackSrc="/placeholders/steel-1.svg"
+                      alt={item.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -459,8 +465,24 @@ export function GalleryAlbumGrid({
               </button>
             </div>
 
-            {prevItem && <img src={prevItem.imageUrl} alt="" aria-hidden className="hidden" />}
-            {nextItem && <img src={nextItem.imageUrl} alt="" aria-hidden className="hidden" />}
+            {prevItem && (
+              <FallbackImage
+                src={prevItem.imageUrl}
+                fallbackSrc="/placeholders/steel-1.svg"
+                alt=""
+                aria-hidden
+                className="hidden"
+              />
+            )}
+            {nextItem && (
+              <FallbackImage
+                src={nextItem.imageUrl}
+                fallbackSrc="/placeholders/steel-1.svg"
+                alt=""
+                aria-hidden
+                className="hidden"
+              />
+            )}
           </div>
         </div>
       )}

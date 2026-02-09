@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 export type ProjectItem = {
   id: string;
@@ -158,8 +159,12 @@ export function TestimonialProjects({
                 >
                   <div className="grid gap-4 p-4 sm:grid-cols-[200px_1fr]">
                     <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={project.images[0]} alt={project.title} className="h-full w-full object-cover" />
+                      <FallbackImage
+                        src={project.images[0]}
+                        fallbackSrc="/placeholders/steel-1.svg"
+                        alt={project.title}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between gap-3">
@@ -216,9 +221,9 @@ export function TestimonialProjects({
                 className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] text-left shadow-card transition duration-200 hover:-translate-y-1 hover:border-white/30"
               >
                 <div className="relative aspect-[16/10] bg-white/[0.03]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <FallbackImage
                     src={project.images[0]}
+                    fallbackSrc="/placeholders/steel-1.svg"
                     alt={project.title}
                     className="h-full w-full object-cover transition duration-300 hover:scale-[1.04]"
                   />
@@ -303,9 +308,9 @@ export function TestimonialProjects({
                 Next
               </button>
 
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <FallbackImage
                 src={activeImage}
+                fallbackSrc="/placeholders/steel-1.svg"
                 alt={activeProject.title}
                 onLoad={() => setImageLoading(false)}
                 className="relative z-[2] mx-auto h-full max-h-[74vh] w-full rounded-xl bg-[#06101a] object-contain"
@@ -338,8 +343,13 @@ export function TestimonialProjects({
                         : "border-white/15 hover:border-white/35"
                     }`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={image} alt={`${activeProject.title} ${index + 1}`} loading="lazy" className="h-full w-full object-cover" />
+                    <FallbackImage
+                      src={image}
+                      fallbackSrc="/placeholders/steel-1.svg"
+                      alt={`${activeProject.title} ${index + 1}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -367,8 +377,24 @@ export function TestimonialProjects({
               </button>
             </div>
 
-            {prevImage && <img src={prevImage} alt="" aria-hidden className="hidden" />}
-            {nextImage && <img src={nextImage} alt="" aria-hidden className="hidden" />}
+            {prevImage && (
+              <FallbackImage
+                src={prevImage}
+                fallbackSrc="/placeholders/steel-1.svg"
+                alt=""
+                aria-hidden
+                className="hidden"
+              />
+            )}
+            {nextImage && (
+              <FallbackImage
+                src={nextImage}
+                fallbackSrc="/placeholders/steel-1.svg"
+                alt=""
+                aria-hidden
+                className="hidden"
+              />
+            )}
           </div>
         </div>
       )}

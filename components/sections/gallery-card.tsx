@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { GalleryItem } from "@prisma/client";
 import { parseJsonArray } from "@/lib/utils";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 const categoryLabels: Record<string, string> = {
   ROOFING: "Roofing",
@@ -41,6 +42,7 @@ export function GalleryCard({ item, featured = false }: { item: GalleryItem; fea
   const categoryLabel = pickCategoryLabel(item.tags);
   const cardSpan = featured ? "sm:col-span-2 lg:col-span-2" : "";
   const aspect = featured ? "aspect-[16/10]" : "aspect-[4/3]";
+  const safeImage = item.imageUrl?.trim() || "/placeholders/steel-1.svg";
   const href = categoryLabel
     ? { pathname: "/gallery", query: { album: categoryLabel } }
     : "/gallery";
@@ -56,9 +58,9 @@ export function GalleryCard({ item, featured = false }: { item: GalleryItem; fea
       }
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-brand-yellow/60 via-white/30 to-brand-red/60 opacity-80 transition duration-300 group-hover:opacity-100" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={item.imageUrl}
+      <FallbackImage
+        src={safeImage}
+        fallbackSrc="/placeholders/steel-1.svg"
         alt={item.title}
         className={`h-full w-full object-cover opacity-95 transition duration-500 group-hover:scale-[1.05] group-hover:brightness-[1.04] ${aspect}`}
       />

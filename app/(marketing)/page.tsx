@@ -8,6 +8,7 @@ import { WhyUsCard } from "@/components/sections/why-us-card";
 import { GalleryCard } from "@/components/sections/gallery-card";
 import { FAQAccordion } from "@/components/sections/faq-accordion";
 import { HeroLogoLive } from "@/components/sections/hero-logo-live";
+import { FallbackImage } from "@/components/ui/fallback-image";
 import { parseJsonArray } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -272,9 +273,9 @@ export default async function HomePage() {
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] shadow-card transition duration-200 hover:-translate-y-1 hover:border-white/30"
                 >
                   <div className="relative h-40 overflow-hidden bg-white/5">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <FallbackImage
                       src={images[0]}
+                      fallbackSrc="/placeholders/steel-1.svg"
                       alt={project.title}
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.04]"
                     />
