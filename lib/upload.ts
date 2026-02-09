@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
+import { put } from "@vercel/blob";
 
 const allowedTypes = new Set(["image/png", "image/jpeg", "image/webp"]);
 const extensionByMime: Record<string, string> = {
@@ -41,7 +42,7 @@ function detectMime(bytes: Buffer): string | null {
 
 export async function saveUpload(file?: File | null) {
   if (!file || file.size === 0) return null;
-  if (!allowedTypes.has(file.type)) {
+  if (file.type && !allowedTypes.has(file.type)) {
     throw new Error("Invalid file type. Only PNG, JPG, and WEBP are allowed.");
   }
   if (file.size > maxSize) {
@@ -56,6 +57,17 @@ export async function saveUpload(file?: File | null) {
 
   const ext = extensionByMime[detectedMime] || "jpg";
   const filename = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
+
+  // In production (Vercel), use Blob storage for persistent uploads.
+  // In local dev (no blob token), fall back to /public/uploads.
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const blob = await put(`uploads/${filename}`, bytes, {
+      access: "public",
+      contentType: detectedMime
+    });
+    return blob.url;
+  }
+
   const uploadDir = path.join(process.cwd(), "public", "uploads");
 
   await mkdir(uploadDir, { recursive: true });

@@ -5,9 +5,21 @@ import { assertAdmin } from "@/lib/guards";
 import { revalidatePath } from "next/cache";
 import { unlink } from "fs/promises";
 import path from "path";
+import { del } from "@vercel/blob";
 
 async function deleteUploadIfLocal(url: string | null) {
   if (!url) return;
+
+  // Handle Vercel Blob-hosted files
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    try {
+      await del(url);
+    } catch {
+      // ignore blob deletion failures
+    }
+    return;
+  }
+
   if (!url.startsWith("/uploads/")) return;
   const filePath = path.join(process.cwd(), "public", url.replace("/", ""));
   try {
