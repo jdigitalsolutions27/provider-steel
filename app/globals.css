@@ -1,0 +1,428 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  background: #0b1b2b;
+  color: #f8fafc;
+  line-height: 1.6;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+p {
+  line-height: 1.7;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(243, 179, 22, 0.38) rgba(255, 255, 255, 0.06);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: rgba(243, 179, 22, 0.24);
+  color: #fff;
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #f3b316, #d1352d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-grid {
+  background-image: radial-gradient(circle at 1px 1px, rgba(196, 201, 207, 0.18) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.glass {
+  background: rgba(15, 25, 40, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+}
+
+.page-shell {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.section-head {
+  margin-bottom: 2rem;
+}
+
+.section-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.56);
+}
+
+.section-title {
+  margin-top: 0.5rem;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  line-height: 1.1;
+}
+
+.section-copy {
+  margin-top: 0.75rem;
+  max-width: 46rem;
+  color: rgba(248, 250, 252, 0.72);
+}
+
+.shimmer {
+  background: linear-gradient(110deg, rgba(255,255,255,0.08) 8%, rgba(255,255,255,0.18) 18%, rgba(255,255,255,0.08) 33%);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroDrift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 120px 80px;
+  }
+}
+
+@keyframes heroDriftReverse {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -160px -120px;
+  }
+}
+
+@keyframes logoFloat {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+  45% {
+    transform: translateY(-6px) scale(1.01);
+  }
+}
+
+@keyframes logoGlowPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.36));
+  }
+}
+
+@keyframes logoImpactShake {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  30% {
+    transform: translate3d(-2px, 1px, 0);
+  }
+  62% {
+    transform: translate3d(2px, -1px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hammerDropA {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--hx), calc(var(--hy) - 18px), 0) rotate(calc(var(--hr) - 18deg)) scale(0.9);
+  }
+  24% {
+    opacity: 0.5;
+  }
+  58% {
+    opacity: 0.72;
+    transform: translate3d(calc(var(--hx) - 2px), calc(var(--hy) + 3px), 0)
+      rotate(calc(var(--hr) - 10deg)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--hx) + 1px), calc(var(--hy) - 1px), 0)
+      rotate(calc(var(--hr) + 4deg)) scale(0.92);
+  }
+}
+
+@keyframes hammerDropB {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--hx), calc(var(--hy) - 20px), 0) rotate(calc(var(--hr) - 20deg)) scale(0.88);
+  }
+  22% {
+    opacity: 0.46;
+  }
+  56% {
+    opacity: 0.68;
+    transform: translate3d(calc(var(--hx) - 2px), calc(var(--hy) + 5px), 0)
+      rotate(calc(var(--hr) - 8deg)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--hx) + 2px), calc(var(--hy) - 2px), 0)
+      rotate(calc(var(--hr) + 6deg)) scale(0.9);
+  }
+}
+
+@keyframes impactShard {
+  0% {
+    opacity: var(--alpha, 0.2);
+    transform: translate3d(0, 0, 0) rotate(var(--r, 0deg)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--dx), var(--dy), 0) rotate(calc(var(--r, 0deg) + var(--spin, 0deg))) scale(0.36);
+  }
+}
+
+@keyframes hammerTap {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  40% {
+    transform: rotate(-18deg) scale(1.05);
+  }
+  70% {
+    transform: rotate(8deg) scale(1.02);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+.hammer-tap {
+  animation: hammerTap 0.35s ease;
+}
+
+.hero-logo-live {
+  will-change: transform;
+}
+
+.hero-logo-float {
+  animation: logoFloat 5.2s ease-in-out infinite, logoGlowPulse 4.5s ease-in-out infinite;
+  transition: transform 0.15s ease-out, filter 0.15s ease-out;
+}
+
+.hero-logo-impact {
+  animation: logoImpactShake 0.2s ease-out;
+}
+
+.hero-hammer-orbit {
+  position: absolute;
+  width: 34px;
+  color: rgba(241, 245, 249, 0.6);
+  opacity: 0;
+  transform: translate3d(var(--hx), var(--hy), 0) rotate(var(--hr));
+  pointer-events: none;
+}
+
+.hero-hammer-orbit.h1 {
+  --hx: -18%;
+  --hy: 8%;
+  --hr: -28deg;
+  color: rgba(241, 245, 249, 0.72);
+}
+
+.hero-hammer-orbit.h2 {
+  --hx: 100%;
+  --hy: 10%;
+  --hr: 26deg;
+  color: rgba(243, 179, 22, 0.74);
+}
+
+.hero-hammer-orbit.h3 {
+  --hx: -12%;
+  --hy: 84%;
+  --hr: -14deg;
+  color: rgba(209, 53, 45, 0.7);
+}
+
+.hero-hammer-orbit.h4 {
+  --hx: 96%;
+  --hy: 84%;
+  --hr: 18deg;
+  color: rgba(138, 150, 164, 0.74);
+}
+
+.hero-hammer-orbit.h5 {
+  --hx: 45%;
+  --hy: -16%;
+  --hr: -4deg;
+  color: rgba(112, 126, 140, 0.72);
+}
+
+.hero-hammer-orbit.wave-even.is-hit {
+  animation: hammerDropA 0.94s cubic-bezier(0.17, 0.7, 0.22, 1) both;
+}
+
+.hero-hammer-orbit.wave-odd.is-hit {
+  animation: hammerDropB 0.94s cubic-bezier(0.17, 0.7, 0.22, 1) both;
+}
+
+/* Responsive hammer sizing/placement so cluster stays clean on smaller viewports */
+@media (max-width: 1024px) {
+  .hero-hammer-orbit {
+    width: 30px;
+  }
+  .hero-hammer-orbit.h1 {
+    --hx: -12%;
+    --hy: 12%;
+  }
+  .hero-hammer-orbit.h2 {
+    --hx: 94%;
+    --hy: 12%;
+  }
+  .hero-hammer-orbit.h3 {
+    --hx: -8%;
+    --hy: 80%;
+  }
+  .hero-hammer-orbit.h4 {
+    --hx: 90%;
+    --hy: 80%;
+  }
+  .hero-hammer-orbit.h5 {
+    --hx: 46%;
+    --hy: -10%;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-hammer-orbit {
+    width: 24px;
+  }
+  .hero-hammer-orbit.h1 {
+    --hx: -6%;
+    --hy: 18%;
+    --hr: -18deg;
+  }
+  .hero-hammer-orbit.h2 {
+    --hx: 86%;
+    --hy: 18%;
+    --hr: 18deg;
+  }
+  .hero-hammer-orbit.h3 {
+    --hx: -4%;
+    --hy: 74%;
+    --hr: -10deg;
+  }
+  .hero-hammer-orbit.h4 {
+    --hx: 84%;
+    --hy: 74%;
+    --hr: 12deg;
+  }
+  .hero-hammer-orbit.h5 {
+    --hx: 46%;
+    --hy: -4%;
+    --hr: -2deg;
+  }
+}
+
+.hero-impact-particles {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hero-impact-particle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w, 3px);
+  height: var(--h, 2px);
+  border-radius: 2px;
+  opacity: var(--alpha, 0.2);
+  background: linear-gradient(
+    120deg,
+    rgba(var(--tone, 218, 172, 104), 0.9),
+    rgba(var(--tone, 218, 172, 104), 0.18)
+  );
+  transform-origin: center;
+  animation: impactShard var(--life, 520ms) cubic-bezier(0.18, 0.72, 0.25, 1) forwards;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo-float,
+  .hero-logo-impact,
+  .hero-hammer-orbit.wave-even.is-hit,
+  .hero-hammer-orbit.wave-odd.is-hit,
+  .hero-impact-particle {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1;
+  }
+}
+
+
+select option {
+  color: #0b1b2b;
+}
+
+input,
+textarea,
+select {
+  background-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(243, 179, 22, 0.8);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

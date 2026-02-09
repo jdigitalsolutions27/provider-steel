@@ -1,0 +1,211 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  deletedAt        DateTime?
+  name             String
+  phone            String
+  email            String?
+  location         String?
+  inquiryType      String
+  productId        String?
+  serviceId        String?
+  message          String
+  preferredContact String
+  contactLink      String?
+  status           String   @default("NEW")
+  source           String   @default("WEBSITE_FORM")
+  priority         String   @default("MEDIUM")
+  followUpAt       DateTime?
+  assignedToUserId String?
+  notes            String?
+  attachments      String?
+
+  product   Product? @relation(fields: [productId], references: [id])
+  service   Service? @relation(fields: [serviceId], references: [id])
+  assignedTo User?   @relation("AssignedLeads", fields: [assignedToUserId], references: [id])
+  events     LeadEvent[]
+}
+
+model LeadEvent {
+  id        String   @id @default(cuid())
+  leadId    String
+  userId    String?
+  type      String
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  deletedAt        DateTime?
+  name             String
+  slug             String   @unique
+  category         String
+  shortDescription String
+  specs            String?
+  colors           String?
+  featured         Boolean  @default(false)
+  imageUrl         String?
+  images           String?
+
+  leads Lead[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  slug        String   @unique
+  description String
+  featured    Boolean  @default(false)
+  iconName    String?
+
+  leads Lead[]
+}
+
+model GalleryItem {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  title       String
+  description String?
+  imageUrl    String
+  tags        String?
+  featured    Boolean  @default(false)
+}
+
+model TestimonialProject {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  title       String
+  slug        String   @unique
+  details     String
+  status      String   @default("ONGOING")
+  statusNote  String?
+  imageUrl    String
+  images      String?
+  location    String?
+  completedAt DateTime?
+  sortOrder   Int      @default(0)
+}
+
+model MediaItem {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  title     String?
+  url       String
+  tags      String?
+}
+
+model FAQItem {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  question  String
+  answer    String
+  order     Int
+}
+
+model WhyUsItem {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String
+  iconName    String?
+  order       Int
+}
+
+model SiteContent {
+  id               Int    @id @default(1)
+  heroHeading      String
+  heroSubheading   String
+  ctaPrimaryText   String
+  ctaSecondaryText String
+  aboutIntro       String
+  aboutBody        String
+}
+
+model SiteSettings {
+  id            Int    @id @default(1)
+  businessName  String
+  taglineMain   String
+  subtitle      String
+  serviceLine   String
+  phone         String
+  email         String
+  address       String
+  messengerUrl  String?
+  whatsappUrl   String?
+  serviceAreas  String?
+  galleryCategories String?
+  productCategories String?
+  logoTextSmall String
+}
+
+model User {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String
+  passwordChangedAt DateTime?
+  passwordResetTokenHash String?
+  passwordResetTokenExpiresAt DateTime?
+  deletedAt    DateTime?
+  avatarUrl    String?
+
+  assignedLeads Lead[] @relation("AssignedLeads")
+  leadEvents    LeadEvent[]
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String
+  path      String?
+  source    String?
+  label     String?
+  value     Float?
+  ip        String?
+  userAgent String?
+  meta      String?
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  actorId    String?
+  actorEmail String?
+  actorRole  String?
+  action     String
+  targetType String
+  targetId   String?
+  message    String?
+  meta       String?
+}
+
