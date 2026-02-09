@@ -1,29 +1,36 @@
 import Link from "next/link";
 import type { Product } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
+import { FallbackImage } from "@/components/ui/fallback-image";
 import { parseJsonArray } from "@/lib/utils";
+
+function normalizeImageSrc(value: string) {
+  return value
+    .trim()
+    .replace(/^["']+|["']+$/g, "")
+    .replace(/^\[+|\]+$/g, "");
+}
+
+function isLikelyImageSrc(value: string) {
+  return value.startsWith("/") || value.startsWith("http://") || value.startsWith("https://");
+}
 
 export function ProductCard({ product }: { product: Product }) {
   const galleryImages = parseJsonArray(product.images);
-  const primaryImage =
-    galleryImages.find((item) => item.trim()) || product.imageUrl || "";
+  const primaryImage = [...galleryImages, product.imageUrl || ""]
+    .map((item) => normalizeImageSrc(String(item || "")))
+    .find((item) => !!item && isLikelyImageSrc(item));
 
   return (
     <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-card transition duration-300 hover:-translate-y-1 hover:border-white/30 hover:shadow-soft">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-brand-yellow/40 via-white/20 to-brand-red/40 opacity-0 transition duration-300 group-hover:opacity-100" />
       <div className="relative h-52 overflow-hidden bg-brand-steel">
-        {primaryImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={primaryImage}
-            alt={product.name}
-            className="h-full w-full object-cover opacity-90 transition duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-sm text-white/60">
-            No image
-          </div>
-        )}
+        <FallbackImage
+          src={primaryImage || "/placeholders/steel-1.svg"}
+          fallbackSrc="/placeholders/steel-1.svg"
+          alt={product.name}
+          className="h-full w-full object-cover opacity-90 transition duration-300 group-hover:scale-105"
+        />
         {product.featured && (
           <div className="absolute left-4 top-4">
             <Badge className="border-amber-300/70 bg-[#2b210a]/90 text-amber-100 shadow-[0_8px_24px_rgba(0,0,0,0.45)] backdrop-blur-sm">
