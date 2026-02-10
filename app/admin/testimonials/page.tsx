@@ -12,6 +12,8 @@ const statusStyles: Record<string, string> = {
   ONGOING: "border-brand-yellow/40 bg-brand-yellow/10 text-brand-yellow"
 };
 
+const featuredStyle = "border-brand-red/40 bg-brand-red/10 text-brand-red";
+
 export default async function TestimonialsAdminPage() {
   await requireAdminSession();
 
@@ -57,6 +59,13 @@ export default async function TestimonialsAdminPage() {
                     >
                       {project.status}
                     </span>
+                    {project.featured ? (
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${featuredStyle}`}
+                      >
+                        Featured
+                      </span>
+                    ) : null}
                     <span>Order {project.sortOrder}</span>
                     {project.completedAt ? <span>{formatDate(project.completedAt)}</span> : null}
                   </div>
@@ -128,6 +137,13 @@ export default async function TestimonialsAdminPage() {
                     >
                       {project.status}
                     </span>
+                    {project.featured ? (
+                      <span
+                        className={`ml-2 inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${featuredStyle}`}
+                      >
+                        Featured
+                      </span>
+                    ) : null}
                   </td>
                   <td className="px-4 py-3 text-xs">{project.sortOrder}</td>
                   <td className="px-4 py-3 text-xs">

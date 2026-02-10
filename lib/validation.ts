@@ -82,6 +82,7 @@ export const testimonialProjectSchema = z.object({
   details: z.string().min(2, "Project details must be at least 2 characters."),
   status: z.enum(ProjectStatusValues),
   statusNote: z.string().optional().or(z.literal("")),
+  featured: z.coerce.boolean().optional(),
   imageUrl: z.string().min(3).optional().or(z.literal("")),
   imageUrls: z.string().optional().or(z.literal("")),
   location: z.string().optional().or(z.literal("")),

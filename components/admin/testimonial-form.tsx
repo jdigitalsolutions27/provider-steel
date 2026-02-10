@@ -38,6 +38,7 @@ export function TestimonialForm({
     details?: string;
     status?: "ONGOING" | "COMPLETED";
     statusNote?: string | null;
+    featured?: boolean;
     imageUrl?: string | null;
     imageUrls?: string;
     location?: string | null;
@@ -152,6 +153,23 @@ export function TestimonialForm({
             className="w-full rounded-xl border border-white/20 bg-transparent px-4 py-2.5 text-sm text-white shadow-card/40 focus:border-brand-yellow/70 focus:outline-none focus:ring-2 focus:ring-brand-yellow/30"
           />
         </div>
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            name="featured"
+            type="checkbox"
+            defaultChecked={Boolean(initial?.featured)}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-transparent text-brand-yellow accent-brand-yellow focus:outline-none focus:ring-2 focus:ring-brand-yellow/30"
+          />
+          <span className="min-w-0">
+            <span className="block text-sm font-semibold text-white">Featured on homepage</span>
+            <span className="mt-1 block text-xs text-white/60">
+              When enabled, this project appears in the homepage “Featured Project Stories” section.
+            </span>
+          </span>
+        </label>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

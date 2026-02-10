@@ -40,6 +40,7 @@ export default async function EditTestimonialPage({
             details: project.details,
             status: project.status === "COMPLETED" ? "COMPLETED" : "ONGOING",
             statusNote: project.statusNote || "",
+            featured: project.featured,
             imageUrl: project.imageUrl,
             imageUrls: parseJsonArray(project.images)
               .filter((item) => item !== project.imageUrl)

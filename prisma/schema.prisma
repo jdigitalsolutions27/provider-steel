@@ -102,6 +102,7 @@ model TestimonialProject {
   details     String
   status      String   @default("ONGOING")
   statusNote  String?
+  featured    Boolean  @default(false)
   imageUrl    String
   images      String?
   location    String?

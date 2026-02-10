@@ -44,7 +44,7 @@ export default async function HomePage() {
     take: 6
   });
 
-  const [featuredServices, whyUsItems, featuredTestimonials, faqItems] = await Promise.all([
+  const [featuredServices, whyUsItems, featuredTestimonialsFirst, faqItems] = await Promise.all([
     prisma.service.findMany({
       where: { featured: true },
       orderBy: { createdAt: "desc" },
@@ -52,12 +52,27 @@ export default async function HomePage() {
     }),
     prisma.whyUsItem.findMany({ orderBy: { order: "asc" }, take: 6 }),
     prisma.testimonialProject.findMany({
-      where: { deletedAt: null },
+      where: { deletedAt: null, featured: true },
       orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
       take: 4
     }),
     prisma.fAQItem.findMany({ orderBy: { order: "asc" }, take: 6 })
   ]);
+
+  let featuredTestimonials = featuredTestimonialsFirst;
+  if (featuredTestimonials.length < 4) {
+    const needed = 4 - featuredTestimonials.length;
+    const fill = await prisma.testimonialProject.findMany({
+      where: {
+        deletedAt: null,
+        featured: false,
+        id: { notIn: featuredTestimonials.map((item) => item.id) }
+      },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+      take: needed
+    });
+    featuredTestimonials = [...featuredTestimonials, ...fill];
+  }
 
   const serviceAreas = parseJsonArray(settings.serviceAreas);
 

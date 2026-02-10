@@ -61,6 +61,7 @@ export async function createTestimonialAction(
     details: String(formData.get("details") || ""),
     status: String(formData.get("status") || "ONGOING"),
     statusNote: String(formData.get("statusNote") || ""),
+    featured: formData.get("featured") ?? undefined,
     imageUrl: String(formData.get("imageUrl") || ""),
     imageUrls: String(formData.get("imageUrls") || ""),
     location: String(formData.get("location") || ""),
@@ -123,6 +124,7 @@ export async function createTestimonialAction(
         details: parsed.data.details,
         status: parsed.data.status,
         statusNote: parsed.data.statusNote || null,
+        featured: parsed.data.featured ?? false,
         imageUrl,
         images: additionalImages.length ? JSON.stringify(additionalImages) : null,
         location: parsed.data.location || null,
@@ -139,6 +141,7 @@ export async function createTestimonialAction(
 
   revalidatePath("/admin/testimonials");
   revalidatePath("/testimonials");
+  revalidatePath("/");
   return { ok: true };
 }
 
@@ -155,6 +158,7 @@ export async function updateTestimonialAction(
     details: String(formData.get("details") || ""),
     status: String(formData.get("status") || "ONGOING"),
     statusNote: String(formData.get("statusNote") || ""),
+    featured: formData.get("featured") ?? undefined,
     imageUrl: String(formData.get("imageUrl") || ""),
     imageUrls: String(formData.get("imageUrls") || ""),
     location: String(formData.get("location") || ""),
@@ -224,6 +228,7 @@ export async function updateTestimonialAction(
         details: parsed.data.details,
         status: parsed.data.status,
         statusNote: parsed.data.statusNote || null,
+        featured: parsed.data.featured ?? false,
         imageUrl,
         images: additionalImages.length ? JSON.stringify(additionalImages) : null,
         location: parsed.data.location || null,
@@ -241,6 +246,7 @@ export async function updateTestimonialAction(
   revalidatePath("/admin/testimonials");
   revalidatePath(`/admin/testimonials/${id}`);
   revalidatePath("/testimonials");
+  revalidatePath("/");
   return { ok: true };
 }
 
@@ -253,4 +259,5 @@ export async function deleteTestimonialAction(id: string) {
   revalidatePath("/admin/testimonials");
   revalidatePath("/admin/recycle-bin");
   revalidatePath("/testimonials");
+  revalidatePath("/");
 }
