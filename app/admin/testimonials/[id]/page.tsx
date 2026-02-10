@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/guards";
 import { parseJsonArray } from "@/lib/utils";
@@ -13,14 +13,17 @@ function toDateInput(value?: Date | null) {
 export default async function EditTestimonialPage({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   await requireAdminSession();
 
   const project = await prisma.testimonialProject.findUnique({
-    where: { id: params.id }
+    where: { id }
   });
-  if (!project || project.deletedAt) notFound();
+  if (!project || project.deletedAt) {
+    redirect("/admin/testimonials");
+  }
 
   return (
     <div className="max-w-4xl space-y-6">

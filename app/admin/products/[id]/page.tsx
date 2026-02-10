@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductForm } from "@/components/admin/product-form";
 import { updateProductAction } from "@/app/admin/products/actions";
@@ -22,11 +22,14 @@ function stringifyColors(value: unknown) {
 export default async function EditProductPage({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   await requireAdminSession();
-  const product = await prisma.product.findUnique({ where: { id: params.id } });
-  if (!product || product.deletedAt) notFound();
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product || product.deletedAt) {
+    redirect("/admin/products");
+  }
   const settings = await getSiteSettings();
   const categories = parseJsonArray(settings.productCategories);
 

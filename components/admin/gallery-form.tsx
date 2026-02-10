@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useToast } from "@/components/ui/toast";
 import { ProductCategoryValues } from "@/lib/enums";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 export type GalleryFormState = { ok: boolean; message?: string };
 
@@ -123,8 +124,12 @@ export function GalleryForm({
       {imageUrl && (
         <div className="rounded-2xl border border-white/10 bg-white/[0.05] p-4">
           <p className="text-xs uppercase tracking-[0.3em] text-white/50">Preview</p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imageUrl} alt="Preview" className="mt-3 h-40 w-full rounded-xl object-cover" />
+          <FallbackImage
+            src={imageUrl}
+            fallbackSrc="/placeholders/steel-1.svg"
+            alt="Preview"
+            className="mt-3 h-40 w-full rounded-xl object-cover"
+          />
         </div>
       )}
       <div>

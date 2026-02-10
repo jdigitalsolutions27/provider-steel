@@ -22,13 +22,14 @@ export const metadata: Metadata = {
 export default async function GalleryPage({
   searchParams
 }: {
-  searchParams?: { album?: string | string[] };
+  searchParams?: Promise<{ album?: string | string[] }>;
 }) {
+  const query = searchParams ? await searchParams : undefined;
   const requestedAlbum =
-    typeof searchParams?.album === "string"
-      ? searchParams.album
-      : Array.isArray(searchParams?.album)
-      ? searchParams?.album[0]
+    typeof query?.album === "string"
+      ? query.album
+      : Array.isArray(query?.album)
+      ? query?.album[0]
       : "";
 
   const settings = await getSiteSettings();

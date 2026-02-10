@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/admin/signout-button";
 import { MobileAdminNav } from "@/components/admin/mobile-nav";
 import { getAdminPageLabel } from "@/components/admin/nav-items";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 export function Topbar({
   user,
@@ -42,7 +43,12 @@ export function Topbar({
       <div className="flex items-center gap-4">
         <div className="h-10 w-10 overflow-hidden rounded-full border border-white/10 bg-white/5">
           {user.avatarUrl ? (
-            <img src={user.avatarUrl} alt="Profile" className="h-full w-full object-cover" />
+            <FallbackImage
+              src={user.avatarUrl}
+              fallbackSrc="/placeholders/steel-1.svg"
+              alt="Profile"
+              className="h-full w-full object-cover"
+            />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-white/80">
               {initials}

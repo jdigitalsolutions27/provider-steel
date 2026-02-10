@@ -16,8 +16,9 @@ const categoryLabels: Record<string, string> = {
 export default async function NewGalleryItemPage({
   searchParams
 }: {
-  searchParams?: { category?: string };
+  searchParams?: Promise<{ category?: string }>;
 }) {
+  const query = searchParams ? await searchParams : undefined;
   await requireAdminSession();
   const settings = await getSiteSettings();
   const customCategories = parseJsonArray(settings.galleryCategories);
@@ -30,7 +31,7 @@ export default async function NewGalleryItemPage({
       ...customCategories
     ].map((item) => categoryLabels[item] || item))
   );
-  const selectedCategory = searchParams?.category || "";
+  const selectedCategory = query?.category || "";
   return (
     <div className="max-w-3xl space-y-6">
       <div>

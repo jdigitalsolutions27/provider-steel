@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 type UserCardProps = {
   user: {
@@ -37,7 +38,12 @@ export function UserCard({ user, children }: UserCardProps) {
           aria-label="View profile photo"
         >
           {user.avatarUrl ? (
-            <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
+            <FallbackImage
+              src={user.avatarUrl}
+              fallbackSrc="/placeholders/steel-1.svg"
+              alt={user.name}
+              className="h-full w-full object-cover"
+            />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-white/80">
               {initials}
@@ -68,8 +74,9 @@ export function UserCard({ user, children }: UserCardProps) {
               Close
             </button>
             <div className="overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-[#102338] to-[#091725] p-2 sm:p-3">
-              <img
+              <FallbackImage
                 src={user.avatarUrl}
+                fallbackSrc="/placeholders/steel-1.svg"
                 alt={user.name}
                 className="mx-auto max-h-[72vh] w-full rounded-xl bg-[#071320] object-contain"
               />

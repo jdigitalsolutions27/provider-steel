@@ -11,10 +11,11 @@ type SpecEntry = [string, string];
 export async function generateMetadata({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
   const product = await prisma.product.findFirst({
-    where: { slug: params.slug, deletedAt: null }
+    where: { slug, deletedAt: null }
   });
 
   return {
@@ -55,7 +56,7 @@ function parseSpecsText(raw: string): SpecEntry[] {
   if (!cleaned) return [];
 
   const bulletParts = raw
-    .split(/[\n•]+/)
+    .split(/[\n\u2022]+/)
     .map((part) => part.trim())
     .filter(Boolean);
 
@@ -92,10 +93,11 @@ function expandSpecs(specs: SpecEntry[]): SpecEntry[] {
 export default async function ProductDetailPage({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   const [product, settings] = await Promise.all([
-    prisma.product.findFirst({ where: { slug: params.slug, deletedAt: null } }),
+    prisma.product.findFirst({ where: { slug, deletedAt: null } }),
     getSiteSettings()
   ]);
 

@@ -19,7 +19,7 @@ const pageSize = 10;
 export default async function LeadsPage({
   searchParams
 }: {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     q?: string;
     status?: string;
@@ -28,15 +28,16 @@ export default async function LeadsPage({
     assigned?: string;
     from?: string;
     to?: string;
-  };
+  }>;
 }) {
+  const query = await searchParams;
   const session = await requireSession();
-  const page = Number(searchParams.page || 1);
-  const q = searchParams.q?.trim();
-  const status = searchParams.status as LeadStatus | undefined;
-  const source = searchParams.source as LeadSource | undefined;
-  const priority = searchParams.priority as LeadPriority | undefined;
-  const assigned = searchParams.assigned;
+  const page = Number(query.page || 1);
+  const q = query.q?.trim();
+  const status = query.status as LeadStatus | undefined;
+  const source = query.source as LeadSource | undefined;
+  const priority = query.priority as LeadPriority | undefined;
+  const assigned = query.assigned;
 
   const where: any = {};
 
@@ -52,13 +53,13 @@ export default async function LeadsPage({
   if (priority) where.priority = priority;
   if (assigned) where.assignedToUserId = assigned;
 
-  if (searchParams.from || searchParams.to) {
+  if (query.from || query.to) {
     where.createdAt = {};
-    if (searchParams.from) {
-      where.createdAt.gte = new Date(searchParams.from);
+    if (query.from) {
+      where.createdAt.gte = new Date(query.from);
     }
-    if (searchParams.to) {
-      const end = new Date(searchParams.to);
+    if (query.to) {
+      const end = new Date(query.to);
       end.setHours(23, 59, 59, 999);
       where.createdAt.lte = end;
     }
@@ -99,8 +100,8 @@ export default async function LeadsPage({
   if (source) queryParams.set("source", source);
   if (priority) queryParams.set("priority", priority);
   if (assigned) queryParams.set("assigned", assigned);
-  if (searchParams.from) queryParams.set("from", searchParams.from);
-  if (searchParams.to) queryParams.set("to", searchParams.to);
+  if (query.from) queryParams.set("from", query.from);
+  if (query.to) queryParams.set("to", query.to);
 
   return (
     <div className="space-y-7">
@@ -161,16 +162,16 @@ export default async function LeadsPage({
               </option>
             ))}
           </select>
-          <input
-            type="date"
-            name="from"
-            defaultValue={searchParams.from}
+            <input
+              type="date"
+              name="from"
+              defaultValue={query.from}
             className="rounded-xl border border-white/20 bg-transparent px-4 py-2.5 text-sm text-white shadow-card/40 focus:border-brand-yellow/70 focus:outline-none focus:ring-2 focus:ring-brand-yellow/30"
           />
-          <input
-            type="date"
-            name="to"
-            defaultValue={searchParams.to}
+            <input
+              type="date"
+              name="to"
+              defaultValue={query.to}
             className="rounded-xl border border-white/20 bg-transparent px-4 py-2.5 text-sm text-white shadow-card/40 focus:border-brand-yellow/70 focus:outline-none focus:ring-2 focus:ring-brand-yellow/30"
           />
           <button

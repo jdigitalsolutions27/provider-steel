@@ -5,6 +5,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/toast";
 import { parseJsonArray, slugify } from "@/lib/utils";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 export type TestimonialFormState = {
   ok: boolean;
@@ -238,8 +239,12 @@ export function TestimonialForm({
           <div className="mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
             {previewImages.map((src, index) => (
               <div key={`${src}-${index}`} className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt={`Preview ${index + 1}`} className="h-28 w-full object-cover" />
+                <FallbackImage
+                  src={src}
+                  fallbackSrc="/placeholders/steel-1.svg"
+                  alt={`Preview ${index + 1}`}
+                  className="h-28 w-full object-cover"
+                />
               </div>
             ))}
           </div>

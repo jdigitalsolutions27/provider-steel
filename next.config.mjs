@@ -6,11 +6,11 @@ const csp = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https: http:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-  "connect-src 'self'",
+  "connect-src 'self' https: wss:",
   ...(isProd ? ["upgrade-insecure-requests"] : [])
 ].join("; ");
 

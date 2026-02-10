@@ -21,9 +21,10 @@ const categoryLabels: Record<string, string> = {
 export default async function ProductsPage({
   searchParams
 }: {
-  searchParams: { category?: string };
+  searchParams: Promise<{ category?: string }>;
 }) {
-  const category = searchParams.category;
+  const query = await searchParams;
+  const category = query.category;
   const settings = await getSiteSettings();
   const customCategories = parseJsonArray(settings.productCategories);
   const distinctCategories = await prisma.product.findMany({

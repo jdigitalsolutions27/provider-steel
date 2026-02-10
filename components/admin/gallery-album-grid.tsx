@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { deleteGalleryAction, toggleGalleryFeaturedAction } from "@/app/admin/gallery/actions";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 type GalleryItem = {
   id: string;
@@ -287,9 +288,9 @@ export function GalleryAlbumGrid({ albums }: { albums: Album[] }) {
             >
               <div className="relative h-36 overflow-hidden bg-white/5">
                 {album.preview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <FallbackImage
                     src={album.preview}
+                    fallbackSrc="/placeholders/steel-1.svg"
                     alt={album.label}
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
@@ -364,9 +365,9 @@ export function GalleryAlbumGrid({ albums }: { albums: Album[] }) {
                       : "opacity-100"
                   }`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <FallbackImage
                     src={item.imageUrl}
+                    fallbackSrc="/placeholders/steel-1.svg"
                     alt={item.title}
                     className="h-40 w-full object-cover transition duration-300 group-hover:scale-105"
                   />
@@ -470,9 +471,9 @@ export function GalleryAlbumGrid({ albums }: { albums: Album[] }) {
               >
                 Next
               </button>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <FallbackImage
                 src={activeImage.imageUrl}
+                fallbackSrc="/placeholders/steel-1.svg"
                 alt={activeImage.title}
                 className="mx-auto max-h-[72vh] w-full rounded-xl bg-[#071320] object-contain"
               />
@@ -496,8 +497,12 @@ export function GalleryAlbumGrid({ albums }: { albums: Album[] }) {
                         : "border-white/15 hover:border-white/35"
                     }`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.imageUrl} alt={item.title} className="h-full w-full object-cover" />
+                    <FallbackImage
+                      src={item.imageUrl}
+                      fallbackSrc="/placeholders/steel-1.svg"
+                      alt={item.title}
+                      className="h-full w-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

@@ -5,6 +5,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { useToast } from "@/components/ui/toast";
 import { parseJsonArray, slugify } from "@/lib/utils";
 import { ProductCategoryValues } from "@/lib/enums";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 const categoryLabels: Record<string, string> = {
   ROOFING: "Roofing",
@@ -209,8 +210,12 @@ export function ProductForm({
           <div className="mt-3 grid gap-3 md:grid-cols-3">
             {previewImages.map((src) => (
               <div key={src} className="overflow-hidden rounded-xl border border-white/10">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="Preview" className="h-24 w-full object-cover" />
+                <FallbackImage
+                  src={src}
+                  fallbackSrc="/placeholders/steel-1.svg"
+                  alt="Preview"
+                  className="h-24 w-full object-cover"
+                />
               </div>
             ))}
           </div>

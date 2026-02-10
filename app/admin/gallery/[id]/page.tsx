@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { GalleryForm } from "@/components/admin/gallery-form";
 import { updateGalleryAction } from "@/app/admin/gallery/actions";
@@ -34,14 +34,16 @@ function extractCategory(tags: unknown) {
 export default async function EditGalleryItemPage({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   await requireAdminSession();
   const item = await prisma.galleryItem.findUnique({
-    where: { id: params.id }
+    where: { id }
   });
-  if (!item) notFound();
-  if (item.deletedAt) notFound();
+  if (!item || item.deletedAt) {
+    redirect("/admin/gallery");
+  }
   const settings = await getSiteSettings();
   const customCategories = parseJsonArray(settings.galleryCategories);
   const productCategories = parseJsonArray(settings.productCategories);

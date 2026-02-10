@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { toggleGalleryFeaturedAction } from "@/app/admin/gallery/actions";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 type GalleryManageItem = {
   id: string;
@@ -101,8 +102,12 @@ export function GalleryFeaturedManager({
       key={item.id}
       className="flex items-center gap-3 rounded-2xl border border-white/10 bg-brand-navy/40 p-3 transition hover:border-white/25"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={item.imageUrl} alt={item.title} className="h-16 w-20 rounded-lg object-cover" />
+      <FallbackImage
+        src={item.imageUrl}
+        fallbackSrc="/placeholders/steel-1.svg"
+        alt={item.title}
+        className="h-16 w-20 rounded-lg object-cover"
+      />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-white">{item.title}</p>
         <p className="text-xs text-white/60">{item.category}</p>

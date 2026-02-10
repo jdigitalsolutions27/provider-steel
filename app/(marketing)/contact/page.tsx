@@ -12,8 +12,9 @@ export const metadata: Metadata = {
 export default async function ContactPage({
   searchParams
 }: {
-  searchParams: { product?: string; service?: string };
+  searchParams: Promise<{ product?: string; service?: string }>;
 }) {
+  const query = await searchParams;
   const [settings, products, services] = await Promise.all([
     getSiteSettings(),
     prisma.product.findMany({
@@ -35,8 +36,8 @@ export default async function ContactPage({
         <ContactForm
           products={products}
           services={services}
-          defaultProductSlug={searchParams.product}
-          defaultServiceSlug={searchParams.service}
+          defaultProductSlug={query.product}
+          defaultServiceSlug={query.service}
         />
         <div className="space-y-6">
           <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-8 shadow-card">

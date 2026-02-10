@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatDateTime, parseJsonArray } from "@/lib/utils";
 import { LeadStatusSelect } from "@/components/admin/lead-status-select";
@@ -19,11 +19,12 @@ import {
 export default async function LeadDetailPage({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const session = await requireSession();
   const lead = await prisma.lead.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       product: true,
       service: true,
@@ -32,11 +33,13 @@ export default async function LeadDetailPage({
     }
   });
 
-  if (!lead) notFound();
+  if (!lead) {
+    redirect("/admin/leads");
+  }
   const isStaff = session.user.role === "STAFF";
   const isAssigned = !!lead.assignedToUserId && lead.assignedToUserId === session.user.id;
   if (isStaff && !isAssigned) {
-    notFound();
+    redirect("/admin/leads");
   }
 
   const [users, settings] = await Promise.all([
@@ -378,7 +381,7 @@ export default async function LeadDetailPage({
                     </p>
                     <p className="mt-2 text-xs text-white/40">
                       {formatDateTime(event.createdAt)}
-                      {event.user?.name ? ` · ${event.user.name}` : ""}
+                      {event.user?.name ? ` - ${event.user.name}` : ""}
                     </p>
                   </div>
                 ))

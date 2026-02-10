@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 export function ProductGallery({
   images,
@@ -16,7 +17,7 @@ export function ProductGallery({
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  const active = images[activeIndex] || images[0] || "";
+  const active = images[activeIndex] || images[0] || "/placeholders/steel-1.svg";
   const total = images.length;
   const prevImage = total > 1 ? images[(activeIndex - 1 + total) % total] : null;
   const nextImage = total > 1 ? images[(activeIndex + 1) % total] : null;
@@ -89,9 +90,9 @@ export function ProductGallery({
         className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left"
         aria-label="Open image preview"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <FallbackImage
           src={active}
+          fallbackSrc="/placeholders/steel-1.svg"
           alt={alt}
           loading="lazy"
           className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
@@ -114,8 +115,13 @@ export function ProductGallery({
                   : "border-white/10 hover:border-white/30"
               }`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image} alt={alt} loading="lazy" className="h-full w-full object-cover" />
+              <FallbackImage
+                src={image}
+                fallbackSrc="/placeholders/steel-1.svg"
+                alt={alt}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
             </button>
           ))}
         </div>
@@ -186,9 +192,9 @@ export function ProductGallery({
                 Next
               </button>
 
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <FallbackImage
                 src={active}
+                fallbackSrc="/placeholders/steel-1.svg"
                 alt={alt}
                 onClick={(event) => event.stopPropagation()}
                 onLoad={() => setImageLoading(false)}
@@ -212,8 +218,13 @@ export function ProductGallery({
                         : "border-white/15 hover:border-white/35"
                     }`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={image} alt={`${alt} ${index + 1}`} loading="lazy" className="h-full w-full object-cover" />
+                    <FallbackImage
+                      src={image}
+                      fallbackSrc="/placeholders/steel-1.svg"
+                      alt={`${alt} ${index + 1}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -241,8 +252,24 @@ export function ProductGallery({
               </button>
             </div>
 
-            {prevImage && <img src={prevImage} alt="" aria-hidden className="hidden" />}
-            {nextImage && <img src={nextImage} alt="" aria-hidden className="hidden" />}
+            {prevImage && (
+              <FallbackImage
+                src={prevImage}
+                fallbackSrc="/placeholders/steel-1.svg"
+                alt=""
+                aria-hidden
+                className="hidden"
+              />
+            )}
+            {nextImage && (
+              <FallbackImage
+                src={nextImage}
+                fallbackSrc="/placeholders/steel-1.svg"
+                alt=""
+                aria-hidden
+                className="hidden"
+              />
+            )}
           </div>
         </div>
       )}

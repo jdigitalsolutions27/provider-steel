@@ -2,7 +2,7 @@ import { getServerSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { verifyPassword } from "@/lib/password";
+import { hashPassword, verifyPassword } from "@/lib/password";
 import {
   clearFailedLogins,
   isLoginBlocked,
@@ -39,6 +39,41 @@ function getClientIp(req: unknown) {
   return forwarded?.split(",")[0]?.trim() || realIp || "unknown";
 }
 
+async function maybeBootstrapAdmin(email: string, password: string) {
+  const activeUsers = await prisma.user.count({ where: { deletedAt: null } });
+  if (activeUsers > 0) return null;
+
+  const bootstrapEmail = (process.env.BOOTSTRAP_ADMIN_EMAIL || "admin@g7provider.local").toLowerCase();
+  const bootstrapPassword = process.env.BOOTSTRAP_ADMIN_PASSWORD || "Admin123!";
+
+  if (email !== bootstrapEmail || password !== bootstrapPassword) return null;
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing?.deletedAt) {
+    await prisma.user.update({
+      where: { id: existing.id },
+      data: {
+        deletedAt: null,
+        role: "ADMIN",
+        name: existing.name || "Admin",
+        passwordHash: await hashPassword(password)
+      }
+    });
+    return prisma.user.findUnique({ where: { id: existing.id } });
+  }
+
+  if (existing) return existing;
+
+  return prisma.user.create({
+    data: {
+      email,
+      name: "Admin",
+      role: "ADMIN",
+      passwordHash: await hashPassword(password)
+    }
+  });
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -62,9 +97,12 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
           where: { email }
         });
+        if (!user) {
+          user = await maybeBootstrapAdmin(email, parsed.data.password);
+        }
 
         if (!user || user.deletedAt) {
           registerFailedLogin(attemptKey);

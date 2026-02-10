@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 export type GalleryLiteItem = {
   id: string;
@@ -21,9 +22,9 @@ export function GalleryLightbox({ items }: { items: GalleryLiteItem[] }) {
             onClick={() => setActive(item)}
             className="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <FallbackImage
               src={item.imageUrl}
+              fallbackSrc="/placeholders/steel-1.svg"
               alt={item.title}
               className="w-full object-cover transition duration-300 group-hover:scale-105"
             />
@@ -47,9 +48,9 @@ export function GalleryLightbox({ items }: { items: GalleryLiteItem[] }) {
             Close
           </button>
           <div className="max-w-3xl rounded-2xl border border-white/10 bg-brand-navy p-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <FallbackImage
               src={active.imageUrl}
+              fallbackSrc="/placeholders/steel-1.svg"
               alt={active.title}
               className="max-h-[70vh] w-full rounded-xl object-contain"
             />

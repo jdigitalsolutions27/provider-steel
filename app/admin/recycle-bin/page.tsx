@@ -27,6 +27,7 @@ import {
   restoreUser
 } from "./actions";
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -230,8 +231,12 @@ export default async function RecycleBinPage() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-16 overflow-hidden rounded-lg border border-white/10 bg-white/5">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={project.imageUrl} alt={project.title} className="h-full w-full object-cover" />
+                      <FallbackImage
+                        src={project.imageUrl}
+                        fallbackSrc="/placeholders/steel-1.svg"
+                        alt={project.title}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-white">{project.title}</p>
@@ -297,8 +302,9 @@ export default async function RecycleBinPage() {
                 className="overflow-hidden rounded-2xl border border-white/10 bg-white/5"
               >
                 <div className="aspect-[16/10] bg-white/5">
-                  <img
+                  <FallbackImage
                     src={item.imageUrl}
+                    fallbackSrc="/placeholders/steel-1.svg"
                     alt={item.title}
                     className="h-full w-full object-cover"
                   />
@@ -370,7 +376,12 @@ export default async function RecycleBinPage() {
                 className="overflow-hidden rounded-2xl border border-white/10 bg-white/5"
               >
                 <div className="aspect-[16/10] bg-white/5">
-                  <img src={item.url} alt={item.title || "Media"} className="h-full w-full object-cover" />
+                  <FallbackImage
+                    src={item.url}
+                    fallbackSrc="/placeholders/steel-1.svg"
+                    alt={item.title || "Media"}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <div className="space-y-2 p-4">
                   <div>
@@ -504,9 +515,9 @@ export default async function RecycleBinPage() {
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 overflow-hidden rounded-full border border-white/10 bg-white/5">
                     {user.avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <FallbackImage
                         src={user.avatarUrl}
+                        fallbackSrc="/placeholders/steel-1.svg"
                         alt={user.name}
                         className="h-full w-full object-cover"
                       />

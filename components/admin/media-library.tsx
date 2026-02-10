@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/toast";
 import { createMediaAction, deleteMediaAction } from "@/app/admin/media/actions";
 import { ConfirmActionForm } from "@/components/admin/confirm-action-form";
 import { parseJsonArray } from "@/lib/utils";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 const initialState: { ok: boolean; message?: string } = { ok: false };
 
@@ -72,8 +73,12 @@ export function MediaLibrary({
             const tags = parseJsonArray(item.tags);
             return (
               <div key={item.id} className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.url} alt={item.title || "Media"} className="h-48 w-full object-cover" />
+                <FallbackImage
+                  src={item.url}
+                  fallbackSrc="/placeholders/steel-1.svg"
+                  alt={item.title || "Media"}
+                  className="h-48 w-full object-cover"
+                />
                 <div className="p-4">
                   <p className="text-sm font-semibold text-white">{item.title || "Untitled"}</p>
                   {tags.length > 0 && (

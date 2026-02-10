@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ServiceForm } from "@/components/admin/service-form";
 import { updateServiceAction } from "@/app/admin/services/actions";
@@ -7,11 +7,14 @@ import { requireAdminSession } from "@/lib/guards";
 export default async function EditServicePage({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   await requireAdminSession();
-  const service = await prisma.service.findUnique({ where: { id: params.id } });
-  if (!service) notFound();
+  const service = await prisma.service.findUnique({ where: { id } });
+  if (!service) {
+    redirect("/admin/services");
+  }
 
   return (
     <div className="max-w-3xl space-y-6">
