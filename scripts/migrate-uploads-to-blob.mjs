@@ -3,7 +3,35 @@ import { readFile } from "fs/promises";
 import { PrismaClient } from "@prisma/client";
 import { put } from "@vercel/blob";
 
-const prisma = new PrismaClient();
+async function loadEnvFile(filePath, { override = false } = {}) {
+  try {
+    const raw = await readFile(filePath, "utf8");
+    for (const line of raw.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eq = trimmed.indexOf("=");
+      if (eq === -1) continue;
+      const key = trimmed.slice(0, eq).trim();
+      let value = trimmed.slice(eq + 1).trim();
+      if (!key) continue;
+
+      // Strip matching quotes.
+      if (
+        (value.startsWith("\"") && value.endsWith("\"")) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+
+      if (override || process.env[key] == null) process.env[key] = value;
+    }
+  } catch {
+    // ignore missing env file
+  }
+}
+
+/** @type {PrismaClient | null} */
+let prisma = null;
 const uploadedCache = new Map();
 
 function isLocalUploadUrl(value) {
@@ -107,15 +135,16 @@ async function migrateTestimonials() {
 }
 
 async function migrateMediaAssets() {
-  const records = await prisma.mediaAsset.findMany();
+  // Model is MediaItem in the current schema.
+  const records = await prisma.mediaItem.findMany();
   for (const record of records) {
     const nextUrl = await uploadFromLocalUrl(record.url || "");
     if (nextUrl !== (record.url || "")) {
-      await prisma.mediaAsset.update({
+      await prisma.mediaItem.update({
         where: { id: record.id },
         data: { url: nextUrl || record.url }
       });
-      console.log(`[media] migrated: ${record.name}`);
+      console.log(`[media] migrated: ${record.id}`);
     }
   }
 }
@@ -139,26 +168,32 @@ async function migrateLeadAttachments() {
     where: { attachments: { not: null } }
   });
   for (const record of records) {
-    const current = Array.isArray(record.attachments) ? record.attachments : [];
+    // attachments is stored as a JSON string (or comma/newline list), not a JSON column.
+    const current = parseJsonArray(record.attachments);
     const next = [];
     let changed = false;
     for (const item of current) {
-      if (typeof item !== "string") continue;
       const migrated = await uploadFromLocalUrl(item);
       next.push(migrated);
       if (migrated !== item) changed = true;
     }
-    if (changed) {
-      await prisma.lead.update({
-        where: { id: record.id },
-        data: { attachments: next }
-      });
-      console.log(`[lead] migrated attachments: ${record.name}`);
-    }
+    if (!changed) continue;
+
+    await prisma.lead.update({
+      where: { id: record.id },
+      data: { attachments: next.length ? JSON.stringify(next) : null }
+    });
+    console.log(`[lead] migrated attachments: ${record.name}`);
   }
 }
 
 async function run() {
+  // Allow running locally without extra tooling: load .env files if present.
+  await loadEnvFile(path.join(process.cwd(), ".env"), { override: false });
+  // For one-off prod migrations we want env-local to take precedence over dev defaults.
+  await loadEnvFile(path.join(process.cwd(), ".env.local"), { override: true });
+  await loadEnvFile(path.join(process.cwd(), ".env.production.local"), { override: true });
+
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     throw new Error("BLOB_READ_WRITE_TOKEN is required.");
   }
@@ -166,6 +201,7 @@ async function run() {
     throw new Error("DATABASE_URL is required.");
   }
 
+  prisma = new PrismaClient();
   console.log("Starting upload migration to Vercel Blob...");
   await migrateProducts();
   await migrateGalleryItems();
@@ -182,5 +218,5 @@ run()
     process.exitCode = 1;
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    if (prisma) await prisma.$disconnect();
   });
