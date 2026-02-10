@@ -7,6 +7,9 @@ function run(cmd) {
   execSync(cmd, { stdio: "inherit" });
 }
 
+console.log(`[build] using script build.mjs (vercel=${isVercel ? "yes" : "no"})`);
+console.log(`[build] prisma schema: ${schema}`);
+
 // Locally, Next will also load `.env.production.local` during `next build`,
 // which can accidentally override sqlite `DATABASE_URL` with a postgres URL.
 // OS env vars win, so enforce a sqlite URL for local builds.
