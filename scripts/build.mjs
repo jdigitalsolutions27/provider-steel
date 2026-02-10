@@ -17,8 +17,9 @@ if (!isVercel) {
 
 run(`npx prisma generate --schema ${schema}`);
 
-// In production, apply migrations safely. In dev, keep it lightweight.
-if (isVercel) run(`npx prisma migrate deploy --schema ${schema}`);
-else run(`npx prisma db push --skip-generate --schema ${schema}`);
+// This repo started with sqlite migrations. `prisma migrate deploy` will fail on
+// Postgres due to migration_lock.toml provider mismatch. For Vercel, use
+// `db push` to keep deployments unblocked (schema is controlled in code).
+run(`npx prisma db push --skip-generate --schema ${schema}`);
 
 run("next build");
